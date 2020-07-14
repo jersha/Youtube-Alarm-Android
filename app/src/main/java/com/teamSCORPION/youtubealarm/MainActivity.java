@@ -66,16 +66,20 @@ public class MainActivity extends AppCompatActivity {
         final int[] currentDate = {rightNow[0].get(Calendar.DAY_OF_MONTH)};
         final int[] currentMonth = {rightNow[0].get(Calendar.MONTH)};
         final int[] currentYear = {rightNow[0].get(Calendar.YEAR)};
-        Date = Arrays.toString(currentDate).replaceAll("\\[|\\]|,|\\s", "") + "/" + find_month(Arrays.toString(currentMonth).replaceAll("\\[|\\]|,|\\s", "")) + "/" + Arrays.toString(currentYear).replaceAll("\\[|\\]|,|\\s", "") + ", " + find_day(Arrays.toString(currentDay).replaceAll("\\[|\\]|,|\\s", ""));
-        Time = currentHourIn24Format + " : " + Arrays.toString(currentMinute).replaceAll("\\[|\\]|,|\\s", "");
+        rightNow[0] = Calendar.getInstance();
+        currentHourIn12Format[0] = rightNow[0].get(Calendar.HOUR_OF_DAY);
+        currentMinute[0] = rightNow[0].get(Calendar.MINUTE);
+        Date = find_date(Arrays.toString(currentDate).replaceAll("\\[|\\]|,|\\s", "")) + "/" + find_month(Arrays.toString(currentMonth).replaceAll("\\[|\\]|,|\\s", "")) + "/" + Arrays.toString(currentYear).replaceAll("\\[|\\]|,|\\s", "") + ", " + find_day(Arrays.toString(currentDay).replaceAll("\\[|\\]|,|\\s", ""));
+        if(currentHourIn12Format[0] < 10 && currentMinute[0] > 9){
+            Time = "0" + currentHourIn12Format[0] + " : " + currentMinute[0];
+        }else if(currentHourIn12Format[0] > 9 && currentMinute[0] < 10){
+            Time = currentHourIn12Format[0] + " : " + "0" + currentMinute[0];
+        }else{
+            Time = currentHourIn12Format[0] + " : " + currentMinute[0];
+        }
 
         Random r = new Random();
         random_no = r.nextInt(164);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        device_height = metrics.heightPixels;
-        device_width = metrics.widthPixels;
 
         btn_options_id = new Drawable[4];
         btn_options_id[0] = ResourcesCompat.getDrawable(getResources(), R.drawable.m_settings_btn, null);
@@ -327,14 +331,17 @@ public class MainActivity extends AppCompatActivity {
                 final String action = intent.getAction();
                 assert action != null;
                 if (action.equals(Intent.ACTION_TIME_TICK)) {
-                    final Calendar[] rightNow_new = {Calendar.getInstance()};
-                    final int currentHourIn24Format_new = rightNow_new[0].get(Calendar.HOUR_OF_DAY);
-                    final int[] currentHourIn12Format_new = {rightNow_new[0].get(Calendar.HOUR)};
-                    final int[] currentMinute_new = {rightNow_new[0].get(Calendar.MINUTE)};
-                    if(currentMinute_new[0] < 10){
-
+                    rightNow[0] = Calendar.getInstance();
+                    currentHourIn12Format[0] = rightNow[0].get(Calendar.HOUR_OF_DAY);
+                    currentMinute[0] = rightNow[0].get(Calendar.MINUTE);
+                    String Time_new;
+                    if(currentHourIn12Format[0] < 10 && currentMinute[0] > 9){
+                        Time_new = "0" + currentHourIn12Format[0] + " : " + currentMinute[0];
+                    }else if(currentHourIn12Format[0] > 9 && currentMinute[0] < 10){
+                        Time_new = currentHourIn12Format[0] + " : " + "0" + currentMinute[0];
+                    }else{
+                        Time_new = currentHourIn12Format[0] + " : " + currentMinute[0];
                     }
-                    String Time_new = currentHourIn24Format_new + " : " + Arrays.toString(currentMinute_new).replaceAll("\\[|\\]|,|\\s", "");
                     Time_id.setText(Time_new);
                 }
             }
@@ -369,23 +376,23 @@ public class MainActivity extends AppCompatActivity {
     String find_month(String number){
         String output;
         switch (number){
-            case "0": output = "1";
+            case "0": output = "01";
                 break;
-            case "1": output = "2";
+            case "1": output = "02";
                 break;
-            case "2": output = "3";
+            case "2": output = "03";
                 break;
-            case "3": output = "4";
+            case "3": output = "04";
                 break;
-            case "4": output = "5";
+            case "4": output = "05";
                 break;
-            case "5": output = "6";
+            case "5": output = "06";
                 break;
-            case "6": output = "7";
+            case "6": output = "07";
                 break;
-            case "7": output = "8";
+            case "7": output = "08";
                 break;
-            case "8": output = "9";
+            case "8": output = "09";
                 break;
             case "9": output = "10";
                 break;
@@ -395,6 +402,32 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + number);
+        }
+        return output;
+    }
+
+    String find_date(String number){
+        String output;
+        switch (number){
+            case "1": output = "01";
+                break;
+            case "2": output = "02";
+                break;
+            case "3": output = "03";
+                break;
+            case "4": output = "04";
+                break;
+            case "5": output = "05";
+                break;
+            case "6": output = "06";
+                break;
+            case "7": output = "07";
+                break;
+            case "8": output = "08";
+                break;
+            case "9": output = "09";
+                break;
+            default: output = number;
         }
         return output;
     }
