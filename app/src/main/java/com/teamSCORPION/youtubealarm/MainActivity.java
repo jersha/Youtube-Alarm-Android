@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -31,9 +36,12 @@ public class MainActivity extends AppCompatActivity {
     Drawable[] btn_options_id, btn_add_id;
     ConstraintLayout main_layout;
     Button btn_options, btn_add;
-    TextView Message;
+    TextView Message, Date_id, Time_id;
     String[] quotes;
     int random_no;
+    String Date, Time;
+    BroadcastReceiver m_timeChangedReceiver;
+    IntentFilter s_intentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +53,22 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
 
+        s_intentFilter = new IntentFilter();
+        s_intentFilter.addAction(Intent.ACTION_TIME_TICK);
+        s_intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        s_intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+
         final Calendar[] rightNow = {Calendar.getInstance()};
         final int currentHourIn24Format = rightNow[0].get(Calendar.HOUR_OF_DAY);
         final int[] currentHourIn12Format = {rightNow[0].get(Calendar.HOUR)};
         final int[] currentMinute = {rightNow[0].get(Calendar.MINUTE)};
+        final int[] currentDay = {rightNow[0].get(Calendar.DAY_OF_WEEK)};
+        final int[] currentDate = {rightNow[0].get(Calendar.DAY_OF_MONTH)};
+        final int[] currentMonth = {rightNow[0].get(Calendar.MONTH)};
+        final int[] currentYear = {rightNow[0].get(Calendar.YEAR)};
+        Date = Arrays.toString(currentDate).replaceAll("\\[|\\]|,|\\s", "") + "/" + find_month(Arrays.toString(currentMonth).replaceAll("\\[|\\]|,|\\s", "")) + "/" + Arrays.toString(currentYear).replaceAll("\\[|\\]|,|\\s", "") + ", " + find_day(Arrays.toString(currentDay).replaceAll("\\[|\\]|,|\\s", ""));
+        Time = currentHourIn24Format + " : " + Arrays.toString(currentMinute).replaceAll("\\[|\\]|,|\\s", "");
+
         Random r = new Random();
         random_no = r.nextInt(164);
 
@@ -248,11 +268,16 @@ public class MainActivity extends AppCompatActivity {
         divider1 = findViewById(R.id.divider1);
         divider2 = findViewById(R.id.divider2);
         divider3 = findViewById(R.id.divider3);
+        Date_id = findViewById(R.id.textView_date);
+        Time_id = findViewById(R.id.textView_time);
 
         morning = BitmapFactory.decodeResource(getResources(),R.drawable.m_sticker);
         afternoon = BitmapFactory.decodeResource(getResources(),R.drawable.a_sticker);
         evening = BitmapFactory.decodeResource(getResources(),R.drawable.e_sticker);
         night = BitmapFactory.decodeResource(getResources(),R.drawable.n_sticker);
+
+        Date_id.setText(Date);
+        Time_id.setText(Time);
 
         if(currentHourIn24Format > 3 & currentHourIn24Format < 12){
             main_layout.setBackgroundColor(Color.parseColor("#f3989d"));
@@ -295,5 +320,82 @@ public class MainActivity extends AppCompatActivity {
             divider3.setImageBitmap(night_line);
             Message.setText("Hi Jersha, Good Night\n\nThe true secret of happiness lies in the taking a genuine interest in all the details of daily life.");
         }
+
+        final BroadcastReceiver m_timeChangedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String action = intent.getAction();
+                assert action != null;
+                if (action.equals(Intent.ACTION_TIME_TICK)) {
+                    final Calendar[] rightNow_new = {Calendar.getInstance()};
+                    final int currentHourIn24Format_new = rightNow_new[0].get(Calendar.HOUR_OF_DAY);
+                    final int[] currentHourIn12Format_new = {rightNow_new[0].get(Calendar.HOUR)};
+                    final int[] currentMinute_new = {rightNow_new[0].get(Calendar.MINUTE)};
+                    if(currentMinute_new[0] < 10){
+
+                    }
+                    String Time_new = currentHourIn24Format_new + " : " + Arrays.toString(currentMinute_new).replaceAll("\\[|\\]|,|\\s", "");
+                    Time_id.setText(Time_new);
+                }
+            }
+        };
+
+        registerReceiver(m_timeChangedReceiver, s_intentFilter);
+    }
+
+    String find_day(String number){
+        String output;
+        switch (number){
+            case "1": output = "Sunday";
+                break;
+            case "2": output = "Monday";
+                break;
+            case "3": output = "Tuesday";
+                break;
+            case "4": output = "Wednesday";
+                break;
+            case "5": output = "Thursday";
+                break;
+            case "6": output = "Friday";
+                break;
+            case "7": output = "Saturday";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + number);
+        }
+        return output;
+    }
+
+    String find_month(String number){
+        String output;
+        switch (number){
+            case "0": output = "1";
+                break;
+            case "1": output = "2";
+                break;
+            case "2": output = "3";
+                break;
+            case "3": output = "4";
+                break;
+            case "4": output = "5";
+                break;
+            case "5": output = "6";
+                break;
+            case "6": output = "7";
+                break;
+            case "7": output = "8";
+                break;
+            case "8": output = "9";
+                break;
+            case "9": output = "10";
+                break;
+            case "10": output = "11";
+                break;
+            case "11": output = "12";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + number);
+        }
+        return output;
     }
 }
