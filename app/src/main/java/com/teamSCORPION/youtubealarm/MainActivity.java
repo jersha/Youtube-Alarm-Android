@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     Button ok, skip;
     EditText name_edit, keyword1_edit, keyword2_edit, keyword3_edit, keyword4_edit, keyword5_edit;
     TextView alarm_status;
+    int fav_hr_1, fav_hr_2, fav_hr_3;
+    int fav_min_1, fav_min_2, fav_min_3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,8 +321,53 @@ public class MainActivity extends AppCompatActivity {
         Time_id.setText(Time);
 
         if(clockSettings.getBoolean("my_first_time", true)){
+            SharedPreferences.Editor prefEditor = clockSettings.edit();
+            prefEditor.putInt("FavHr1", 5);
+            prefEditor.putInt("FavMin1", 30);
+            prefEditor.putInt("FavHr2", 6);
+            prefEditor.putInt("FavMin2", 30);
+            prefEditor.putInt("FavHr3", 7);
+            prefEditor.putInt("FavMin3", 30);
+            prefEditor.putBoolean("my_first_time", false);
+            prefEditor.apply();
             enable_foreground(currentHourIn24Format);
         }else{
+            fav_hr_1 = clockSettings.getInt("FavHr1", 5);
+            fav_hr_2 = clockSettings.getInt("FavHr2", 6);
+            fav_hr_3 = clockSettings.getInt("FavHr3", 7);;
+            fav_min_1 = clockSettings.getInt("FavMin1", 30);
+            fav_min_2 = clockSettings.getInt("FavMin2", 30);
+            fav_min_3 = clockSettings.getInt("FavMin3", 30);
+            if(fav_hr_1 > 9 & fav_min_1 > 9){
+                fav_alarm1.setText(fav_hr_1 + " : " + fav_min_1);
+            }else if(fav_hr_1 < 10 & fav_min_1 < 10){
+                fav_alarm1.setText("0" + fav_hr_1 + " : " + "0" +fav_min_1);
+            }else if(fav_hr_1 > 9 & fav_min_1 < 10){
+                fav_alarm1.setText(fav_hr_1 + " : " + "0" +fav_min_1);
+            }else{
+                fav_alarm1.setText("0" + fav_hr_1 + " : " + fav_min_1);
+            }
+
+            if(fav_hr_2 > 9 & fav_min_2 > 9){
+                fav_alarm1.setText(fav_hr_2 + " : " + fav_min_2);
+            }else if(fav_hr_2 < 10 & fav_min_2 < 10){
+                fav_alarm1.setText("0" + fav_hr_2 + " : " + "0" +fav_min_2);
+            }else if(fav_hr_2 > 9 & fav_min_2 < 10){
+                fav_alarm1.setText(fav_hr_2 + " : " + "0" +fav_min_2);
+            }else{
+                fav_alarm1.setText("0" + fav_hr_2 + " : " + fav_min_2);
+            }
+
+            if(fav_hr_3 > 9 & fav_min_3 > 9){
+                fav_alarm1.setText(fav_hr_3 + " : " + fav_min_3);
+            }else if(fav_hr_3 < 10 & fav_min_3 < 10){
+                fav_alarm1.setText("0" + fav_hr_3 + " : " + "0" +fav_min_3);
+            }else if(fav_hr_3 > 9 & fav_min_3 < 10){
+                fav_alarm1.setText(fav_hr_3 + " : " + "0" +fav_min_3);
+            }else{
+                fav_alarm1.setText("0" + fav_hr_3 + " : " + fav_min_3);
+            }
+            
             enable_background(currentHourIn24Format, clockSettings);
         }
 
