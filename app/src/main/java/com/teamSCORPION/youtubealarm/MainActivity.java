@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     String[] quotes;
     int random_no;
     String Name, Date, Time;
-    BroadcastReceiver m_timeChangedReceiver;
     IntentFilter s_intentFilter;
     Switch sw_one, sw_two, sw_three;
     TextView name, title, description, keyword1, keyword2, keyword3, keyword4, keyword5;
@@ -367,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 fav_alarm1.setText("0" + fav_hr_3 + " : " + fav_min_3);
             }
-            
+
             enable_background(currentHourIn24Format, clockSettings);
         }
 
@@ -414,6 +413,15 @@ public class MainActivity extends AppCompatActivity {
                 prefEditor.putBoolean("my_first_time", false);
                 prefEditor.apply();
                 enable_background(currentHourIn24Format, clockSettings);
+            }
+        });
+
+        btn_options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, settings.class);
+                startActivity(intent);
+                finish();
             }
         });
 
