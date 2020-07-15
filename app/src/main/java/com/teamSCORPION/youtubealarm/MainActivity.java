@@ -1,47 +1,52 @@
 package com.teamSCORPION.youtubealarm;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.DisplayMetrics;
-import android.view.Window;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 
-import static com.teamSCORPION.youtubealarm.R.drawable.m_add_btn;
-
 public class MainActivity extends AppCompatActivity {
 
-    float device_height, device_width;
     ImageView sticker, divider1, divider2, divider3;
     Bitmap morning, afternoon, evening, night;
     Bitmap morning_line, afternoon_line, evening_line, night_line;
+    Bitmap morning_first, afternoon_first, evening_first, night_first;
     Drawable[] btn_options_id, btn_add_id;
     ConstraintLayout main_layout;
     Button btn_options, btn_add;
     TextView Message, Date_id, Time_id;
     String[] quotes;
     int random_no;
-    String Date, Time;
+    String Name, Date, Time;
     BroadcastReceiver m_timeChangedReceiver;
     IntentFilter s_intentFilter;
+    Switch sw_one, sw_two, sw_three;
+    TextView name, title, description, keyword1, keyword2, keyword3, keyword4, keyword5;
+    TextView fav_alarm1, fav_alarm2, fav_alarm3;
+    Button ok, skip;
+    EditText name_edit, keyword1_edit, keyword2_edit, keyword3_edit, keyword4_edit, keyword5_edit;
+    TextView alarm_status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,42 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
+
+        sticker = findViewById(R.id.sticker);
+        main_layout = findViewById(R.id.main_layout);
+        btn_options = findViewById(R.id.btn_options);
+        btn_add = findViewById(R.id.button_add);
+        Message = findViewById(R.id.textView_message);
+        divider1 = findViewById(R.id.divider1);
+        divider2 = findViewById(R.id.divider2);
+        divider3 = findViewById(R.id.divider3);
+        Date_id = findViewById(R.id.textView_date);
+        Time_id = findViewById(R.id.textView_time);
+        sw_one = findViewById(R.id.switch1);
+        sw_two = findViewById(R.id.switch2);
+        sw_three = findViewById(R.id.switch3);
+        fav_alarm1 = findViewById(R.id.fav_alarm1);
+        fav_alarm2 = findViewById(R.id.fav_alarm2);
+        fav_alarm3 = findViewById(R.id.fav_alarm3);
+        title = findViewById(R.id.fg_title);
+        description = findViewById(R.id.fg_description);
+        keyword1 = findViewById(R.id.fg_kw1);
+        keyword2 = findViewById(R.id.fg_kw2);
+        keyword3 = findViewById(R.id.fg_kw3);
+        keyword4 = findViewById(R.id.fg_kw4);
+        keyword5 = findViewById(R.id.fg_kw5);
+        ok = findViewById(R.id.fg_ok);
+        skip = findViewById(R.id.fg_skip);
+        keyword1_edit = findViewById(R.id.fg_kw1_edit);
+        keyword2_edit = findViewById(R.id.fg_kw2_edit);
+        keyword3_edit = findViewById(R.id.fg_kw3_edit);
+        keyword4_edit = findViewById(R.id.fg_kw4_edit);
+        keyword5_edit = findViewById(R.id.fg_kw5_edit);
+        alarm_status = findViewById(R.id.alarm_status);
+        name = findViewById(R.id.fg_name);
+        name_edit = findViewById(R.id.fg_name_edit);
+
+        final SharedPreferences clockSettings = getSharedPreferences("MyClockPreferences", 0);
 
         s_intentFilter = new IntentFilter();
         s_intentFilter.addAction(Intent.ACTION_TIME_TICK);
@@ -264,65 +305,23 @@ public class MainActivity extends AppCompatActivity {
         evening_line = BitmapFactory.decodeResource(getResources(),R.drawable.e_line);
         night_line = BitmapFactory.decodeResource(getResources(),R.drawable.n_line);
 
-        sticker = findViewById(R.id.sticker);
-        main_layout = findViewById(R.id.main_layout);
-        btn_options = findViewById(R.id.btn_options);
-        btn_add = findViewById(R.id.button_add);
-        Message = findViewById(R.id.textView_message);
-        divider1 = findViewById(R.id.divider1);
-        divider2 = findViewById(R.id.divider2);
-        divider3 = findViewById(R.id.divider3);
-        Date_id = findViewById(R.id.textView_date);
-        Time_id = findViewById(R.id.textView_time);
-
         morning = BitmapFactory.decodeResource(getResources(),R.drawable.m_sticker);
         afternoon = BitmapFactory.decodeResource(getResources(),R.drawable.a_sticker);
-        evening = BitmapFactory.decodeResource(getResources(),R.drawable.e_sticker);
+        evening = BitmapFactory.decodeResource(getResources(),R.drawable.e_sticker2);
         night = BitmapFactory.decodeResource(getResources(),R.drawable.n_sticker);
+
+        morning_first = BitmapFactory.decodeResource(getResources(),R.drawable.m_glass);
+        afternoon_first = BitmapFactory.decodeResource(getResources(),R.drawable.a_glass);
+        evening_first = BitmapFactory.decodeResource(getResources(),R.drawable.e_glass);
+        night_first = BitmapFactory.decodeResource(getResources(),R.drawable.n_glass);
 
         Date_id.setText(Date);
         Time_id.setText(Time);
 
-        if(currentHourIn24Format > 3 & currentHourIn24Format < 12){
-            main_layout.setBackgroundColor(Color.parseColor("#f3989d"));
-            sticker.setImageBitmap(morning);
-            btn_options.setBackground(btn_options_id[0]);
-            btn_add.setBackground(btn_add_id[0]);
-            Message.setTextColor(Color.parseColor("#f2e3e4"));
-            divider1.setImageBitmap(morning_line);
-            divider2.setImageBitmap(morning_line);
-            divider3.setImageBitmap(morning_line);
-            Message.setText("Hi Jersha, Good Morning\n\n"+quotes[random_no]);
-        }else if(currentHourIn24Format > 11 & currentHourIn24Format < 17){
-            main_layout.setBackgroundColor(Color.parseColor("#febc6e"));
-            sticker.setImageBitmap(afternoon);
-            btn_options.setBackground(btn_options_id[1]);
-            btn_add.setBackground(btn_add_id[1]);
-            Message.setTextColor(Color.parseColor("#f9c3c3"));
-            divider1.setImageBitmap(afternoon_line);
-            divider2.setImageBitmap(afternoon_line);
-            divider3.setImageBitmap(afternoon_line);
-            Message.setText("Hi Jersha, Good Afternoon\n\nThe true secret of happiness lies in the taking a genuine interest in all the details of daily life.");
-        }else if(currentHourIn24Format > 16 & currentHourIn24Format < 21){
-            main_layout.setBackgroundColor(Color.parseColor("#febc6e"));
-            sticker.setImageBitmap(evening);
-            btn_options.setBackground(btn_options_id[2]);
-            btn_add.setBackground(btn_add_id[2]);
-            Message.setTextColor(Color.parseColor("#ffffff"));
-            divider1.setImageBitmap(evening_line);
-            divider2.setImageBitmap(evening_line);
-            divider3.setImageBitmap(evening_line);
-            Message.setText("Hi Jersha, Good Evening\n\nThe true secret of happiness lies in the taking a genuine interest in all the details of daily life.");
-        }else {
-            main_layout.setBackgroundColor(Color.parseColor("#202020"));
-            sticker.setImageBitmap(night);
-            btn_options.setBackground(btn_options_id[3]);
-            btn_add.setBackground(btn_add_id[3]);
-            Message.setTextColor(Color.parseColor("#c5c5c5"));
-            divider1.setImageBitmap(night_line);
-            divider2.setImageBitmap(night_line);
-            divider3.setImageBitmap(night_line);
-            Message.setText("Hi Jersha, Good Night\n\nThe true secret of happiness lies in the taking a genuine interest in all the details of daily life.");
+        if(clockSettings.getBoolean("my_first_time", true)){
+            enable_foreground(currentHourIn24Format);
+        }else{
+            enable_background(currentHourIn24Format, clockSettings);
         }
 
         final BroadcastReceiver m_timeChangedReceiver = new BroadcastReceiver() {
@@ -348,6 +347,38 @@ public class MainActivity extends AppCompatActivity {
         };
 
         registerReceiver(m_timeChangedReceiver, s_intentFilter);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String ip_name = name_edit.getText().toString();
+                String ip_kw1 = keyword1_edit.getText().toString();
+                String ip_kw2 = keyword2_edit.getText().toString();
+                String ip_kw3 = keyword3_edit.getText().toString();
+                String ip_kw4 = keyword4_edit.getText().toString();
+                String ip_kw5 = keyword5_edit.getText().toString();
+                SharedPreferences.Editor prefEditor = clockSettings.edit();
+                prefEditor.putString("UserName", ip_name);
+                prefEditor.putString("KeyWord1", ip_kw1);
+                prefEditor.putString("KeyWord2", ip_kw2);
+                prefEditor.putString("KeyWord3", ip_kw3);
+                prefEditor.putString("KeyWord4", ip_kw4);
+                prefEditor.putString("KeyWord5", ip_kw5);
+                prefEditor.putBoolean("my_first_time", false);
+                prefEditor.apply();
+                enable_background(currentHourIn24Format, clockSettings);
+            }
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor prefEditor = clockSettings.edit();
+                prefEditor.putBoolean("my_first_time", false);
+                prefEditor.apply();
+                enable_background(currentHourIn24Format, clockSettings);
+            }
+        });
     }
 
     String find_day(String number){
@@ -430,5 +461,127 @@ public class MainActivity extends AppCompatActivity {
             default: output = number;
         }
         return output;
+    }
+
+    void enable_foreground(int currentHourIn24Format){
+        btn_options.setVisibility(View.GONE);
+        btn_add.setVisibility(View.GONE);
+        sticker.setVisibility(View.GONE);
+        Message.setVisibility(View.GONE);
+        divider1.setVisibility(View.GONE);
+        divider2.setVisibility(View.GONE);
+        divider3.setVisibility(View.GONE);
+        Date_id.setVisibility(View.GONE);
+        Time_id.setVisibility(View.GONE);
+        sw_one.setVisibility(View.GONE);
+        sw_two.setVisibility(View.GONE);
+        sw_three.setVisibility(View.GONE);
+        fav_alarm1.setVisibility(View.GONE);
+        fav_alarm2.setVisibility(View.GONE);
+        fav_alarm3.setVisibility(View.GONE);
+        alarm_status.setVisibility(View.GONE);
+        title.setVisibility(View.VISIBLE);
+        description.setVisibility(View.VISIBLE);
+        name.setVisibility(View.VISIBLE);
+        name_edit.setVisibility(View.VISIBLE);
+        keyword1.setVisibility(View.VISIBLE);
+        keyword2.setVisibility(View.VISIBLE);
+        keyword3.setVisibility(View.VISIBLE);
+        keyword4.setVisibility(View.VISIBLE);
+        keyword5.setVisibility(View.VISIBLE);
+        ok.setVisibility(View.VISIBLE);
+        skip.setVisibility(View.VISIBLE);
+        keyword1_edit.setVisibility(View.VISIBLE);
+        keyword2_edit.setVisibility(View.VISIBLE);
+        keyword3_edit.setVisibility(View.VISIBLE);
+        keyword4_edit.setVisibility(View.VISIBLE);
+        keyword5_edit.setVisibility(View.VISIBLE);
+        if(currentHourIn24Format > 3 & currentHourIn24Format < 12){
+            main_layout.setBackgroundResource(R.drawable.m_glass);
+        }else if(currentHourIn24Format > 11 & currentHourIn24Format < 17){
+            main_layout.setBackgroundResource(R.drawable.a_glass);
+        }else if(currentHourIn24Format > 16 & currentHourIn24Format < 21){
+            main_layout.setBackgroundResource(R.drawable.e_glass);
+        }else {
+            main_layout.setBackgroundResource(R.drawable.n_glass);
+        }
+    }
+
+    void enable_background(int currentHourIn24Format, SharedPreferences clockSettings){
+        Name = clockSettings.getString("UserName", "");
+
+        title.setVisibility(View.GONE);
+        description.setVisibility(View.GONE);
+        name.setVisibility(View.GONE);
+        name_edit.setVisibility(View.GONE);
+        keyword1.setVisibility(View.GONE);
+        keyword2.setVisibility(View.GONE);
+        keyword3.setVisibility(View.GONE);
+        keyword4.setVisibility(View.GONE);
+        keyword5.setVisibility(View.GONE);
+        ok.setVisibility(View.GONE);
+        skip.setVisibility(View.GONE);
+        keyword1_edit.setVisibility(View.GONE);
+        keyword2_edit.setVisibility(View.GONE);
+        keyword3_edit.setVisibility(View.GONE);
+        keyword4_edit.setVisibility(View.GONE);
+        keyword5_edit.setVisibility(View.GONE);
+        btn_options.setVisibility(View.VISIBLE);
+        btn_add.setVisibility(View.VISIBLE);
+        sticker.setVisibility(View.VISIBLE);
+        Message.setVisibility(View.VISIBLE);
+        divider1.setVisibility(View.VISIBLE);
+        divider2.setVisibility(View.VISIBLE);
+        divider3.setVisibility(View.VISIBLE);
+        Date_id.setVisibility(View.VISIBLE);
+        Time_id.setVisibility(View.VISIBLE);
+        sw_one.setVisibility(View.VISIBLE);
+        sw_two.setVisibility(View.VISIBLE);
+        sw_three.setVisibility(View.VISIBLE);
+        fav_alarm1.setVisibility(View.VISIBLE);
+        fav_alarm2.setVisibility(View.VISIBLE);
+        fav_alarm3.setVisibility(View.VISIBLE);
+        alarm_status.setVisibility(View.VISIBLE);
+        if(currentHourIn24Format > 3 & currentHourIn24Format < 12){
+            main_layout.setBackgroundColor(Color.parseColor("#f3989d"));
+            sticker.setImageBitmap(morning);
+            btn_options.setBackground(btn_options_id[0]);
+            btn_add.setBackground(btn_add_id[0]);
+            Message.setTextColor(Color.parseColor("#f2e3e4"));
+            divider1.setImageBitmap(morning_line);
+            divider2.setImageBitmap(morning_line);
+            divider3.setImageBitmap(morning_line);
+            Message.setText("Hi "+Name+", Good Morning\n\n"+quotes[random_no]);
+        }else if(currentHourIn24Format > 11 & currentHourIn24Format < 17){
+            main_layout.setBackgroundColor(Color.parseColor("#d63447"));
+            sticker.setImageBitmap(afternoon);
+            btn_options.setBackground(btn_options_id[1]);
+            btn_add.setBackground(btn_add_id[1]);
+            Message.setTextColor(Color.parseColor("#f9c3c3"));
+            divider1.setImageBitmap(afternoon_line);
+            divider2.setImageBitmap(afternoon_line);
+            divider3.setImageBitmap(afternoon_line);
+            Message.setText("Hi "+Name+", Good Afternoon\n\n"+quotes[random_no]);
+        }else if(currentHourIn24Format > 16 & currentHourIn24Format < 21){
+            main_layout.setBackgroundColor(Color.parseColor("#febc6e"));
+            sticker.setImageBitmap(evening);
+            btn_options.setBackground(btn_options_id[2]);
+            btn_add.setBackground(btn_add_id[2]);
+            Message.setTextColor(Color.parseColor("#ffffff"));
+            divider1.setImageBitmap(evening_line);
+            divider2.setImageBitmap(evening_line);
+            divider3.setImageBitmap(evening_line);
+            Message.setText("Hi "+Name+", Good Evening\n\n"+quotes[random_no]);
+        }else {
+            main_layout.setBackgroundColor(Color.parseColor("#202020"));
+            sticker.setImageBitmap(night);
+            btn_options.setBackground(btn_options_id[3]);
+            btn_add.setBackground(btn_add_id[3]);
+            Message.setTextColor(Color.parseColor("#807e7e"));
+            divider1.setImageBitmap(night_line);
+            divider2.setImageBitmap(night_line);
+            divider3.setImageBitmap(night_line);
+            Message.setText("Hi "+Name+", Good Night\n\n"+quotes[random_no]);
+        }
     }
 }
