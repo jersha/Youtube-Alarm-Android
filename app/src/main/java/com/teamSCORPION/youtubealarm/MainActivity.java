@@ -606,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
             divider1.setImageBitmap(morning_line);
             divider2.setImageBitmap(morning_line);
             divider3.setImageBitmap(morning_line);
-            Message.setText("Hi "+Name+", Good Morning\n\n"+quotes[random_no]);
+            Message.setText("Hi"+Name+", Good Morning\n\n"+quotes[random_no]);
         }else if(currentHourIn24Format > 11 & currentHourIn24Format < 17){
             main_layout.setBackgroundColor(Color.parseColor("#d63447"));
             sticker.setImageBitmap(afternoon);
@@ -616,7 +616,7 @@ public class MainActivity extends AppCompatActivity {
             divider1.setImageBitmap(afternoon_line);
             divider2.setImageBitmap(afternoon_line);
             divider3.setImageBitmap(afternoon_line);
-            Message.setText("Hi "+Name+", Good Afternoon\n\n"+quotes[random_no]);
+            Message.setText("Hi"+Name+", Good Afternoon\n\n"+quotes[random_no]);
         }else if(currentHourIn24Format > 16 & currentHourIn24Format < 21){
             main_layout.setBackgroundColor(Color.parseColor("#febc6e"));
             sticker.setImageBitmap(evening);
@@ -626,7 +626,7 @@ public class MainActivity extends AppCompatActivity {
             divider1.setImageBitmap(evening_line);
             divider2.setImageBitmap(evening_line);
             divider3.setImageBitmap(evening_line);
-            Message.setText("Hi "+Name+", Good Evening\n\n"+quotes[random_no]);
+            Message.setText("Hi"+Name+", Good Evening\n\n"+quotes[random_no]);
         }else {
             main_layout.setBackgroundColor(Color.parseColor("#202020"));
             sticker.setImageBitmap(night);
@@ -636,7 +636,7 @@ public class MainActivity extends AppCompatActivity {
             divider1.setImageBitmap(night_line);
             divider2.setImageBitmap(night_line);
             divider3.setImageBitmap(night_line);
-            Message.setText("Hi "+Name+", Good Night\n\n"+quotes[random_no]);
+            Message.setText("Hi"+Name+", Good Night\n\n"+quotes[random_no]);
         }
     }
 }
